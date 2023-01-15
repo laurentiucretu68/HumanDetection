@@ -1,0 +1,193 @@
+.color-nav {
+    background-color: #294E95;
+}
+
+.btn {
+    transition: 0.5s !important;
+}
+
+.submitButton {
+    background-color: cornflowerblue !important;
+    border-color: cornflowerblue !important;
+}
+
+.submitButton:hover {
+    background-color: #4553d3 !important;
+    border-color: cornflowerblue !important;
+}
+
+.login-button {
+    background-color: #FB9847 !important;
+    border-color: #FB9847 !important;
+    height: 45px;
+    width: 100%;
+}
+
+.login-button:hover {
+    background-color: #EE7E2C !important;
+    border-color: #EE7E2C !important;
+}
+
+.login-container {
+    background-color: white;
+    padding: 40px;
+    display: flex;
+    /*min-height: 80vh;*/
+    height: 80vh;
+    width: 94%;
+    margin-left: 3%;
+    border-radius: 5px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.login-div-form {
+    height: 600px;
+    width: 30%;
+    border-radius: 5px;
+    padding: 25px;
+    box-shadow: 0 0 70px #E6EAF6;
+}
+
+.login-wallpaper {
+    width: 70%;
+    margin-left: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.login-img {
+    width: 80%;
+    height: 100%;
+}
+
+.sign-up-question {
+    color: #6C757D;
+}
+
+.login-text-color {
+    color: #FB9847;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+.login-text-color:hover {
+    color: #EE7E2C;
+}
+
+.login-form {
+    padding-top: 30px;
+}
+
+.form-control {
+    height: 45px;
+}
+
+.home-image-container {
+    display: flex;
+    justify-content: center;
+    height: 550px;
+    padding-top: 50px;
+}
+
+.upload-form {
+    display: flex;
+    justify-content: center;
+}
+
+.delete-all-button {
+    float: right;
+    margin-bottom: 10px;
+    background-color: #FF8E9E !important;
+    border-color: #FF8E9E !important;
+}
+
+.delete-all-button:hover {
+    background-color: #FF597B !important;
+    border-color: #FF597B !important;
+}
+
+.download-button {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: white;
+    transition: 0.5s;
+}
+
+.download-button:hover {
+    background-color: green !important;
+    border-color: green !important;
+}
+
+.delete-button {
+    background-color: #f44336 !important;
+    border-color: #f44336 !important;
+    color: white;
+    transition: 0.5s;
+}
+
+.delete-button:hover {
+    background-color: crimson !important;
+    border-color: crimson !important;
+}
+
+.closeNotification{
+    transition: 0.5s;
+    height: 30px;
+    width: 30px;
+    float: right;
+    color: #0969da;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.closeNotification2{
+    color: #e38c8c;
+}
+
+.closeNotification2:hover{
+    color: white;
+}
+
+.closeNotification:hover{
+    color: #a6d9ff;
+}
+
+.error {
+    background-color: #f3cece;
+    border: 1px solid #e38c8c;
+    height: 50px;
+}
+
+.error p{
+    text-align: center;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+
+.message {
+    background-color: #ddf4ff;
+    border: 1px solid #a6d9ff;
+    height: 50px;
+}
+
+.message p{
+    text-align: center;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+.spinner-container{
+    justify-content: center;
+    display: flex;
+}
+
+.spinner {
+    color: #a6d9ff;
+    margin-top: 10px;
+}

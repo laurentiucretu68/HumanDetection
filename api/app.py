@@ -1,51 +1,42 @@
 import os
 import bcrypt
 import magic
-from flask import Flask, jsonify, request, session, send_file
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from utils.db.connection import data_base
 from utils.handler import process_archive
 from flask_cors import CORS
 from dotenv import load_dotenv
 from utils.send_mail import send_email, send_archive_to_email
-from utils.storage.main import upload_file, list_files, delete_file
+from utils.storage.main import upload_file, list_files, delete_file, download_file
 from utils.publish_message import publish_message
 from werkzeug.utils import secure_filename
 from threading import Timer
 
-
-load_dotenv()
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+load_dotenv()
 
-@app.route('/login', methods=['POST'])
+
+@app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json()
     email = body['email']
-    password = body['password'].encode('utf-8')
+    password = str.encode(body['password'])
 
     user = [user.to_dict() for user in data_base.collection(u'users').where(u"email", u"==", email)
-            .limit(1).stream()][0]
+            .limit(1).stream()]
 
-    if bcrypt.checkpw(password, user['password'].encode('utf-8')):
-        session['user'] = user['email']
-        return jsonify({"success": True})
-
-    return jsonify({"success": False})
-
-
-@app.route('/logout', methods=['POST'])
-def logout():
-    if session['user']:
-        session.pop('user')
-        return jsonify({"success": True})
+    if len(user) > 0:
+        user = user[0]
+        if bcrypt.checkpw(password, user['password']):
+            return jsonify({"success": True})
 
     return jsonify({"success": False})
 
 
-@app.route('/signup', methods=['POST'])
+@app.route('/api/signup', methods=['POST'])
 def signup():
     body = request.get_json()
     email = body['email']
@@ -60,16 +51,17 @@ def signup():
     return jsonify({"error": "email_used"})
 
 
-@app.route('/archive/list/<string:email>', methods=['GET'])
+@app.route('/api/archive/list/<string:email>', methods=['GET'])
 def list_archives(email):
     try:
         files = list_files(email)
         return jsonify(files)
-    except Exception:
+    except Exception as e:
+        print(e)
         return jsonify({"error": True})
 
 
-@app.route('/archive/delete/<string:email>/<string:file_name>', methods=['DELETE'])
+@app.route('/api/archive/delete/<string:email>/<string:file_name>', methods=['DELETE'])
 def delete_archive(email, file_name):
     try:
         stat = delete_file(file_name, email)
@@ -81,15 +73,25 @@ def delete_archive(email, file_name):
         return jsonify({"error": True})
 
 
-@app.route('/archive/get', methods=['GET'])
-def get_archive():
+@app.route('/api/archive/get/<string:email>/<string:file_name>', methods=['GET'])
+def get_archive(email, file_name):
     try:
-        pass
-    except Exception:
+        user_id = [user.id for user in data_base.collection(u'users').where(u"email", u"==", email)
+                   .limit(1).stream()]
+
+        if len(user_id) > 0:
+            user_id = user_id[0].lower()
+            file = download_file(file_name, email)
+            t = Timer(180, publish_message, [user_id])
+            t.start()
+
+            return send_from_directory(f'./{str(user_id).lower()}/', file_name)
+    except Exception as e:
+        print(e)
         return jsonify({"error": True})
 
 
-@app.route('/archive/add', methods=['POST'])
+@app.route('/api/archive/add', methods=['POST'])
 def add_archive():
     try:
         if 'archive' not in request.files:
@@ -109,21 +111,20 @@ def add_archive():
 
             filename = secure_filename(archive.filename)
             archive.save(os.path.join(f'./{user_id}', filename))
-            process_archive(f'./{str(user_id)}/{filename}', filename)
+            process_archive(f'./{str(user_id)}/{filename}', filename, str(user_id))
 
             _ = send_archive_to_email(email, 'Archive from HumanDetection App', 'Your archive is in attachments',
                                       f'./{user_id}/{filename}')
+
             _ = upload_file(f'./{user_id}/{filename}', filename, email)
 
-            mime = magic.Magic(mime=True)
-            file_type = mime.from_file(f'./{user_id}/{filename}')
-
-            t = Timer(60, publish_message, [user_id])
+            t = Timer(120, publish_message, [user_id])
             t.start()
 
-            return send_file(f'./{user_id}/{filename}', mimetype=file_type)
+            return jsonify({"success": True})
 
-    except Exception:
+    except Exception as e:
+        print(e)
         return jsonify({"error": True})
 
 
@@ -131,5 +132,5 @@ if __name__ == '__main__':
     app.run(
         debug=True,
         host='0.0.0.0',
-        port=5001
+        port=8080
     )

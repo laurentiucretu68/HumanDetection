@@ -11,10 +11,11 @@ client = storage.Client()
 
 def upload_file(file, name, email):
     user_id = [user.id for user in data_base.collection(u'users').where(u"email", u"==", email)
-               .limit(1).stream()][0]
+               .limit(1).stream()]
 
-    if user_id:
-        bucket = client.get_bucket(str(user_id).lower())
+    if len(user_id):
+        user_id = user_id[0]
+        bucket = client.bucket(str(user_id).lower())
         if not bucket.exists():
             bucket.location = 'EU'
             bucket = client.create_bucket(bucket)
@@ -30,10 +31,10 @@ def list_files(email):
                .limit(1).stream()]
 
     if user_id:
-        bucket = client.get_bucket(str(user_id[0]).lower())
-        blobs = bucket.list_blobs()
-
-        return [(blob.name, blob.time_created) for blob in blobs]
+        bucket = client.bucket(str(user_id[0]).lower())
+        if bucket.exists():
+            blobs = bucket.list_blobs()
+            return [(blob.name, blob.time_created) for blob in blobs]
     return []
 
 
@@ -42,26 +43,28 @@ def delete_file(file_name, email):
                .limit(1).stream()]
 
     if user_id:
-        bucket = client.get_bucket(str(user_id[0]).lower())
-        blobs = bucket.list_blobs()
+        bucket = client.bucket(str(user_id[0]).lower())
+        if bucket.exists():
+            blobs = bucket.list_blobs()
 
-        for blob in blobs:
-            if blob.name == file_name:
-                blob.delete()
-                return True
+            for blob in blobs:
+                if blob.name == file_name:
+                    blob.delete()
+                    return True
     return False
 
 
-async def download_file(name, email):
+def download_file(name, email):
     user_id = [user.id for user in data_base.collection(u'users').where(u"email", u"==", email)
                .limit(1).stream()]
 
     if user_id:
-        bucket = await client.bucket(str(user_id).lower())
+        bucket = client.bucket(str(user_id[0]).lower())
+        if bucket.exists():
+            blob = bucket.blob(f'{name}')
+            if not os.path.exists(f'./{str(user_id[0]).lower()}'):
+                os.mkdir(f'./{str(user_id[0]).lower()}')
+                stat = blob.download_to_filename(f'./{str(user_id[0]).lower()}/{name}')
+                return stat
 
-        blob = await bucket.blob(name)
-        with open(os.path.join(name)) as f:
-            stat = await client.download_blob_to_file(blob, f)
-            if stat is True:
-                return f
     return False

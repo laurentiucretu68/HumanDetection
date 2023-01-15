@@ -13,7 +13,8 @@ subscription_path = os.getenv('SUBSCRIPTION_PATH')
 def callback(message):
     print(message)
     path = './' + str(message.data.decode('utf-8'))
-    shutil.rmtree(path)
+    if os.path.exists(path):
+        shutil.rmtree(path)
     message.ack()
 
 

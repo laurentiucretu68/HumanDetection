@@ -7,7 +7,7 @@ from cvlib.object_detection import draw_bbox
 import zipfile
 
 
-def counter(np_buf, doc_name, filename):
+def counter(np_buf, doc_name, filename, user_id):
     img = cv2.imdecode(np_buf, cv2.IMREAD_UNCHANGED)
     box, label, count = cv.detect_common_objects(img)
 
@@ -24,19 +24,19 @@ def counter(np_buf, doc_name, filename):
 
     output = draw_bbox(img, box, label, count)
     output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-    print("Number of people in this image are " + str(len(label)))
 
     im = Image.fromarray(output)
     im.save(doc_name)
 
-    z = zipfile.ZipFile(filename, "a")
+    z = zipfile.ZipFile(f'./{user_id}/{filename}', "a")
     z.write(doc_name)
     os.remove(doc_name)
 
 
-def process_archive(archive_path, filename):
+def process_archive(archive_path, filename, user_id):
     with zipfile.ZipFile(archive_path, "r") as z:
+        os.remove(archive_path)
         for name in z.namelist():
             buf = z.read(name)
             np_buf = np.frombuffer(buf, np.uint8)
-            counter(np_buf, z.getinfo(name).filename, filename)
+            counter(np_buf, z.getinfo(name).filename, filename, user_id)
