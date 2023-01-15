@@ -131,3 +131,5 @@ dmypy.json
 .idea
 
 venv
+
+node_modules

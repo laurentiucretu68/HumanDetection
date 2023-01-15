@@ -11,6 +11,7 @@ const fileInput = React.createRef()
 function HomePage() {
     const email = sessionStorage.getItem('user')
     const navigate = useNavigate()
+    const [success, setSuccess] = useState('')
     const [message, setMessage] = useState('')
     const [spinner, setSpinner] = useState(false)
 
@@ -21,6 +22,7 @@ function HomePage() {
     }, [])
 
     const handleSubmit = async (e) => {
+        setSuccess('The archive will be processed and sent via email.')
         setSpinner(true)
         e.preventDefault()
         const formData = new FormData();
@@ -28,13 +30,14 @@ function HomePage() {
         formData.append("email", email);
 
         try {
-            const {status} = await axiosInstance().post(`/archive/add`, formData, {
+            const {data} = await axiosInstance().post(`/archive/add`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+            console.log(data)
 
-            if (status === 200) {
+            if (data.success) {
                 fileInput.current.value = ''
                 setMessage(`File sent to email and can be download from dashboard`)
                 setTimeout(() => setMessage(''), 10000)
@@ -43,6 +46,7 @@ function HomePage() {
             console.log(err)
         }
         setSpinner(false)
+        setSuccess('')
     }
 
 
@@ -53,6 +57,13 @@ function HomePage() {
                     <div className="message">
                         <p>
                             {message}
+                            <span className="closeNotification closeNotification2"
+                                  onClick={() => setMessage('')}>x</span>
+                        </p>
+                    </div> : success ?
+                    <div className="message">
+                        <p>
+                            {success}
                             <span className="closeNotification closeNotification2"
                                   onClick={() => setMessage('')}>x</span>
                         </p>

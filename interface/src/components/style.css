@@ -188,6 +188,8 @@
 }
 
 .spinner {
-    color: #a6d9ff;
+    color: cornflowerblue;
     margin-top: 10px;
+    height: 80px !important;
+    width: 80px !important;
 }
