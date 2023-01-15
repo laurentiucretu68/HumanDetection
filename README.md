@@ -50,7 +50,14 @@
 ![computeEngine.png](img%2FcomputeEngine.png)
 
 ### `Configurare`
-
+- Pentru a clona VM-ul, vom face o imagine care sa contina starea
+  curenta.
+- Crearea imaginii
+  - `Compute Engine > Images:`
+  ![computeEngineImage.jpeg](img%2FcomputeEngineImage.jpeg)
+- Crearea imaginii web
+  - `Compute Engine > Images:`
+![computeEngineImagesWeb.jpeg](img%2FcomputeEngineImagesWeb.jpeg)
 ---
 
 ### 2. Google Storage
@@ -124,7 +131,7 @@
 > Integrarea poate fi realizată prin intermediul diferitelor servicii GCP cum ar fi 
 > Compute Engine sau App Engine, pentru a gestiona și a trimite e-mailuri în masă. 
 > De asemenea, prin intermediul serviciilor de stocare cum ar fi Google Cloud Storage 
-> sau Firebase Storage, se poate salva atașamentele sau imagini in cloud.
+> sau Firebase Storage, se pot salva atașamentele sau imagini in cloud.
 
 ![sendGrip.png](img%2FsendGrip.png)
 
