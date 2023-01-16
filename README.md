@@ -57,7 +57,19 @@
   ![computeEngineImage.jpeg](img%2FcomputeEngineImage.jpeg)
 - Crearea imaginii web
   - `Compute Engine > Images:`
-![computeEngineImagesWeb.jpeg](img%2FcomputeEngineImagesWeb.jpeg)
+  ![computeEngineImagesWeb.jpeg](img%2FcomputeEngineImagesWeb.jpeg)
+- Configurare Load Balancer
+  - `Compute Engine > Create an instance template`
+  ![CEInstanceTemplate-1.jpeg](img%2FCEInstanceTemplate-1.jpeg)
+  ![CEInstanceTemplate-2.jpeg](img%2FCEInstanceTemplate-2.jpeg)
+  ![CEInstanceTemplate-3.jpeg](img%2FCEInstanceTemplate-3.jpeg)
+  ![CEInstanceTemplate-4.jpeg](img%2FCEInstanceTemplate-4.jpeg)
+  - `Compute Engine > Create instance group`
+  ![CEInstanceGroup-1.jpeg](img%2FCEInstanceGroup-1.jpeg)
+  ![CEInstanceGroup-2.jpeg](img%2FCEInstanceGroup-2.jpeg)
+  ![CEInstanceGroup-3.jpeg](img%2FCEInstanceGroup-3.jpeg)
+  ![CEInstanceGroup-4.jpeg](img%2FCEInstanceGroup-4.jpeg)
+
 ---
 
 ### 2. Google Storage
