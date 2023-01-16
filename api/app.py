@@ -19,6 +19,20 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 load_dotenv()
 
 
+@app.route('/files', methods=['GET'])
+def get_files():
+    directories = [d for d in os.listdir() if os.path.isdir(d)]
+    return jsonify(directories)
+
+
+@app.route('/delete/directory/<string:path>', methods=['GET'])
+def delete_files(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+        return jsonify({"success": True})
+    return jsonify({"success": False})
+
+
 @app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json()
